@@ -25,6 +25,8 @@ public class Staff {
 	@Enumerated(EnumType.ORDINAL)
 	private EGender gender;
 	
+	private Date birthDay;
+	
 	private Double staffPhone;
 	
 	private String staffAddress;
@@ -96,7 +98,7 @@ public class Staff {
 	
 	
 
-	public Staff(String staffCode, String staffFirstName, String staffLastName, EGender gender, Double staffPhone,
+	public Staff(String staffCode, String staffFirstName, String staffLastName, EGender gender,Date birthDay, Double staffPhone,
 			String staffAddress, Double staffCMND, Date staffStarDay, EStaffStatus staffStatus,
 			String userName, String staffEmail, String password) {
 		super();
@@ -104,6 +106,7 @@ public class Staff {
 		this.staffFirstName = staffFirstName;
 		this.staffLastName = staffLastName;
 		this.gender = gender;
+		this.birthDay = birthDay;
 		this.staffPhone = staffPhone;
 		this.staffAddress = staffAddress;
 		this.staffEmail = staffEmail;
@@ -144,6 +147,14 @@ public class Staff {
 
 	public void setStaffFirstName(String staffFirstName) {
 		this.staffFirstName = staffFirstName;
+	}
+	
+	public Date getBirthDay() {
+		return birthDay;
+	}
+
+	public void setBirthDay(Date birthDay) {
+		this.birthDay = birthDay;
 	}
 
 	public String getStaffLastName() {

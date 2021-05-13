@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,6 +45,7 @@ public class RoomProjectController {
 	RoomRepository roomRepo;
 	
 	@PostMapping("project/{proId}/room/{roomId}/roomproject")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> createRoomProject(@PathVariable Long proId,@PathVariable Long roomId, @RequestBody @Valid RoomProject roomProject, BindingResult result) {
 		if(result.hasErrors()) {
 			StringBuilder devErrorMsg = new StringBuilder();
@@ -132,6 +134,7 @@ public class RoomProjectController {
 	}
 	
 	@PutMapping("/project/{proId}/room/{roomId}/roomproject/{rpId}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> updateRoomProject(@PathVariable Long proId,@PathVariable Long roomId, @PathVariable("rpId") Long rpId, @RequestBody @Valid RoomProject roomProject, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod RoomProject data");
@@ -163,6 +166,7 @@ public class RoomProjectController {
 	}
 	
 	@DeleteMapping("/roomproject/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> deletetRoomProject(@PathVariable("id") Long id) {
 //		TimeKeeping timeKeeping = tkRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No TimeKeeping found with id=" + id));

@@ -27,6 +27,8 @@ private String staffCode;
 	@Enumerated(EnumType.ORDINAL)
 	private EGender gender;
 	
+	private Date birthDay;
+	
 	private Double staffPhone;
 	
 	private String staffAddress;
@@ -69,6 +71,11 @@ private String staffCode;
 	public EGender getGender() {
 		return gender;
 	}
+
+	public Date getBirthDay() {
+		return birthDay;
+	}
+
 
 	public Double getStaffPhone() {
 		return staffPhone;

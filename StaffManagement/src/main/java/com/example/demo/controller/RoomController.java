@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,6 +38,7 @@ public class RoomController {
 	RoomRepository roomRepo;
 	
 	@PostMapping("/room")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> createRoom(@RequestBody @Valid Room room, BindingResult result) {
 		if(result.hasErrors()) {
 			StringBuilder devErrorMsg = new StringBuilder();
@@ -91,6 +93,7 @@ public class RoomController {
 	}
 	
 	@PutMapping("room/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> updateRoom(@PathVariable("id") Long id, @RequestBody @Valid Room room, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod IngredientCategory data");
@@ -118,6 +121,7 @@ public class RoomController {
 	}
 	
 	@DeleteMapping("/room/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> deletetRoom(@PathVariable("id") Long id) {
 //		Violation violation = violationRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No violation found with id=" + id));
@@ -133,6 +137,7 @@ public class RoomController {
 	}
 	
 	@GetMapping("/allsalary/{n}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> allSalary(@PathVariable("n") String n){
 		try {
 			if(n != "") {

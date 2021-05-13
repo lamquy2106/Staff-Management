@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +46,7 @@ public class TimeKeepingController {
 	ArrayTKRepository tkaRepo;
 	
 	@PostMapping("staff/{staffId}/timekeeping")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> createTimeKeeping(@PathVariable Long staffId, @RequestBody @Valid TimeKeeping timeKeeping, BindingResult result) {
 		if(result.hasErrors()) {
 			StringBuilder devErrorMsg = new StringBuilder();
@@ -128,6 +130,7 @@ public class TimeKeepingController {
 	}
 	
 	@PutMapping("/staff/{staffId}/timekeeping/{tkId}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> updateTimeKeeping(@PathVariable Long staffId, @PathVariable("tkId") Long tkId, @RequestBody @Valid TimeKeeping timeKeeping, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod TimeKeeping data");
@@ -156,6 +159,7 @@ public class TimeKeepingController {
 	}
 	
 	@DeleteMapping("/timekeeping/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> deletetTimeKeeping(@PathVariable("id") Long id) {
 //		TimeKeeping timeKeeping = tkRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No TimeKeeping found with id=" + id));

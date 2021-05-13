@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ public class TimeKeepingArrayController {
 	ArrayTKRepository tkaRepo;
 	
 	@PostMapping("/bangchamcong/{month}/{year}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> allTimeKeeping(@PathVariable("month") int month , @PathVariable("year") int year){
 		try {
 			List<TimeKeeping> tkData = tkRepo.findByLike(month,year);
@@ -170,6 +172,7 @@ public class TimeKeepingArrayController {
 		}
 	}
 	@GetMapping("/xuatchamcong/{month}/{year}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> xuatChamCong(@PathVariable("month") int month , @PathVariable("year") int year){
 		try {
 			List<TKArray> tkaData = tkaRepo.findByMonthAndYear(month, year);

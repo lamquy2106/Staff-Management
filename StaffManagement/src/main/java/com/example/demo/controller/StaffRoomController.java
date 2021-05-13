@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,6 +45,7 @@ public class StaffRoomController {
 	RoomRepository roomRepo;
 	
 	@PostMapping("staff/{staffId}/room/{roomId}/staffroom")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> createStaffRoom(@PathVariable Long staffId,@PathVariable Long roomId, @RequestBody @Valid StaffRoom staffRoom, BindingResult result) {
 		if(result.hasErrors()) {
 			StringBuilder devErrorMsg = new StringBuilder();
@@ -132,6 +134,7 @@ public class StaffRoomController {
 	}
 	
 	@PutMapping("/staff/{staffId}/room/{roomId}/staffroom/{srId}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> updateStaffRoom(@PathVariable Long staffId,@PathVariable Long roomId, @PathVariable("srId") Long srId, @RequestBody @Valid StaffRoom staffRoom, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod StaffRoom data");
@@ -161,6 +164,7 @@ public class StaffRoomController {
 	}
 	
 	@DeleteMapping("/staffroom/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> deletetStaffRoom(@PathVariable("id") Long id) {
 //		TimeKeeping timeKeeping = tkRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No TimeKeeping found with id=" + id));

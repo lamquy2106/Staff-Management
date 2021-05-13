@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,6 +48,7 @@ public class SalaryController {
 	SalaryInMonthRepository simRepo;
 	
 	@PostMapping("staff/{staffId}/salary")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> createSalary(@PathVariable Long staffId, @RequestBody @Valid Salary salary, BindingResult result) {
 		if(result.hasErrors()) {
 			StringBuilder devErrorMsg = new StringBuilder();
@@ -78,6 +80,7 @@ public class SalaryController {
 	}
 
 	@GetMapping("/salary")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> listSalary(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "100") int size){
 		try {
@@ -103,6 +106,7 @@ public class SalaryController {
 	}
 	
 	@GetMapping("/salary/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> getSalary(@PathVariable("id") Long id) {
 		try {
 			Long staffId;
@@ -130,6 +134,7 @@ public class SalaryController {
 	}
 	
 	@PutMapping("/staff/{staffId}/salary/{salaryId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> updateSalary(@PathVariable Long staffId, @PathVariable("salaryId") Long salaryId, @RequestBody @Valid Salary salary, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod Salary data");
@@ -161,6 +166,7 @@ public class SalaryController {
 	}
 	
 	@DeleteMapping("/salary/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> deletetSalary(@PathVariable("id") Long id) {
 //		Salary salary = salaryRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No Salary found with id=" + id));

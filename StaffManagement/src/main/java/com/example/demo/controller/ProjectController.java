@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +42,7 @@ public class ProjectController {
 	StaffRepository staffRepo;
 	
 	@PostMapping("/staff/{staffId}/project")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> createProject(@PathVariable Long staffId,@RequestBody @Valid Project project, BindingResult result) {
 		if(result.hasErrors()) {
 			StringBuilder devErrorMsg = new StringBuilder();
@@ -123,6 +125,7 @@ public class ProjectController {
 	}
 	
 	@PutMapping("/staff/{staffId}/project/{proId}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> updateProject(@PathVariable Long staffId,@PathVariable("proId") Long proId, @RequestBody @Valid Project project, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod project data");
@@ -152,6 +155,7 @@ public class ProjectController {
 	}
 	
 	@DeleteMapping("/project/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 	public ResponseEntity<Map<String, Object>> deletetProject(@PathVariable("id") Long id) {
 //		Project project = projectRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No Project found with id=" + id));

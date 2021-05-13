@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,7 +94,6 @@ public class StaffController {
 					.badRequest()
 					.body(new MessageResponse("Error: Username is already taken!"));
 		}
-
 		if (userRepository.existsByStaffEmail(signUpRequest.getStaffEmail())) {
 			return ResponseEntity
 					.badRequest()
@@ -108,6 +106,7 @@ public class StaffController {
 				signUpRequest.getStaffFirstName(),
 				signUpRequest.getStaffLastName(),
 				signUpRequest.getGender(),
+				signUpRequest.getBirthDay(),
 				signUpRequest.getStaffPhone(),
 				signUpRequest.getStaffAddress(),
 				signUpRequest.getStaffCMND(),
@@ -118,7 +117,6 @@ public class StaffController {
 				 encoder.encode(signUpRequest.getPassword()));
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
-		System.out.println(signUpRequest.getRole().toString());
 		if (strRoles.isEmpty()) {
 			System.out.println("jfgálkgjáljgh");
 			Role userRole = roleRepository.findByName(ERole.ROLE_STAFF)
@@ -187,6 +185,7 @@ public class StaffController {
 	}
 	
 	@PutMapping("staff/{staffId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> updateStaff( @PathVariable("staffId") Long staffId, @RequestBody @Valid Staff staff, BindingResult result){
 		if(result.hasErrors()) {
 			throw new IllegalArgumentException("Invalod staff data");
@@ -199,15 +198,16 @@ public class StaffController {
 				_staff.setStaffCode(staff.getStaffCode());
 				_staff.setStaffFirstName(staff.getStaffFirstName());
 				_staff.setStaffLastName(staff.getStaffLastName());
+				_staff.setGender(staff.getGender());
+				_staff.setBirthDay(staff.getBirthDay());
 				_staff.setStaffPhone(staff.getStaffPhone());
 				_staff.setStaffAddress(staff.getStaffAddress());
-				_staff.setStaffEmail(staff.getStaffEmail());
 				_staff.setStaffCMND(staff.getStaffCMND());
 				_staff.setStaffStarDay(staff.getStaffStarDay());
 				_staff.setStaffStatus(staff.getStaffStatus());
-				_staff.setRoles(staff.getRoles());
 				_staff.setUserName(staff.getUserName());
-				_staff.setPassword(staff.getPassword());
+				_staff.setStaffEmail(staff.getStaffEmail());
+				_staff.setPassword(encoder.encode(staff.getPassword()));
 				
 				Staff saveStaff = staffRepo.save(_staff);
 				
@@ -225,6 +225,7 @@ public class StaffController {
 	}
 	
 	@DeleteMapping("/staff/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Map<String, Object>> deletetStaff(@PathVariable("id") Long id) {
 //		Staff staff = staffRepo.findById(id)
 //				.orElseThrow(() -> new ResourceNotFoundException("No Staff found with id=" + id));
